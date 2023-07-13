@@ -1,0 +1,51 @@
+server:
+  port: 8081
+
+spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
+        type: none
+  redis:
+    host: 'localhost'
+    port: 6379
+  main:
+    banner-mode: off
+  datasource:
+    url: 'jdbc:postgresql://localhost:5432/bank_db'
+    username: 'postgres'
+    password: 'admin'
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      use-new-id-generator-mappings: false
+    show-sql: true
+  mail:
+    host: 'smtp.gmail.com'
+    port: 587
+    username: 'dev.noreply.gg@gmail.com'
+    password: 'iifymdzclpctfszb'
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+kz:
+  silk:
+    online:
+      bank:
+        token:
+          secret: 'secret'
+          expirationMs: 86400000
+        email:
+          email-from: dev.noreply.gg@gmail.com
+          templates-location: C:\Users\User\Desktop\onlinebank\src\main\resources\email\
+        confirmation:
+          url: http://localhost:8081/auth/confirm
+          email-subject: 'Подтверждение электронной почты'
+          token:
+            ttl: 15 #15 minutes
