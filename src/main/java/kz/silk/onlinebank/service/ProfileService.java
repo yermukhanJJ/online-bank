@@ -6,11 +6,15 @@ import kz.silk.onlinebank.domain.exceptions.ForbiddenException;
 import kz.silk.onlinebank.domain.exceptions.NotFoundException;
 import kz.silk.onlinebank.domain.exceptions.UnauthorizedException;
 import kz.silk.onlinebank.domain.model.Profile;
-import kz.silk.onlinebank.domain.model.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+/**
+ * Profile operation service
+ *
+ * @author YermukhanJJ
+ */
 @Service
 public interface ProfileService extends UserDetailsService {
 
@@ -48,15 +52,6 @@ public interface ProfileService extends UserDetailsService {
      * @throws NotFoundException Profile not found
      */
     Profile getProfile(@NonNull Long id) throws NotFoundException;
-
-    /**
-     * Returns a profile by email
-     *
-     * @param email Email address
-     * @return Fetched {@link Profile} entit
-     * @throws NotFoundException Profile not found
-     */
-    Profile getProfile(@NonNull String email) throws NotFoundException;
 
     /**
      * Returns a profile by username

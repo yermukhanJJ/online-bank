@@ -24,6 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implements of {@link ProfileService}
+ *
+ * @author YermukhanJJ
+ */
 @RequiredArgsConstructor
 @Slf4j
 @Service(value = ProfileServiceImpl.SERVICE_VALUE)
@@ -44,7 +49,7 @@ public class ProfileServiceImpl implements ProfileService {
                                  @NonNull String firstName,
                                  @NonNull String lastName,
                                  @NonNull String password) throws BadRequestException {
-        log.debug("createProfile({}, ..., {}, {}, {})", email, username, firstName, lastName);
+        log.info("createProfile({}, ..., {}, {}, {})", email, username, firstName, lastName);
         Profile profile = new Profile();
 
         if (profileRepository.existsByEmail(email)) {
@@ -70,7 +75,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile getCurrentProfile() throws UnauthorizedException {
-        log.debug("getCurrentProfile()");
+        log.info("getCurrentProfile()");
         UsernamePasswordAuthenticationToken authenticationToken =
                 (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         if (authenticationToken == null) {
@@ -81,21 +86,14 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public Profile getProfile(@NonNull Long id) throws NotFoundException {
-        log.debug("getProfile({})", id);
+        log.info("getProfile({})", id);
         return profileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
     }
 
     @Override
-    public Profile getProfile(@NonNull String email) throws NotFoundException {
-        log.debug("getProfile({})", email);
-        return profileRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(String.format("User with email %s not found", email)));
-    }
-
-    @Override
     public Profile getProfileByUsername(@NonNull String username) throws NotFoundException {
-        log.debug("getProfileByUsername({})", username);
+        log.info("getProfileByUsername({})", username);
         try {
             return (Profile) loadUserByUsername(username);
         } catch (UsernameNotFoundException e) {
@@ -106,7 +104,7 @@ public class ProfileServiceImpl implements ProfileService {
     //TODO: оптимизировать метод
     @Override
     public void updateCurrentProfile(ProfileUpdateDto profileUpdateDto) {
-        log.debug("updateCurrentProfile({})", profileUpdateDto);
+        log.info("updateCurrentProfile({})", profileUpdateDto);
         Profile profile = getCurrentProfile();
         if (profileUpdateDto.getUsername() != null && !profile.getUsername().equals(profileUpdateDto.getUsername())) {
             if (profileRepository.existsByUsername(profileUpdateDto.getUsername())) {
@@ -136,7 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void updateProfileRole(@NonNull Long id, @NonNull String role) throws ForbiddenException {
-        log.debug("updateProfileRole({}, {})", id, role);
+        log.info("updateProfileRole({}, {})", id, role);
         if (getCurrentProfile().getRoles().contains(roleService.getRoleByTitle(ROLE_ADMIN))) {
             Profile profile = getProfile(id);
             Role newRole = roleService.getRoleByTitle(role);
@@ -149,7 +147,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void updateEmailConfirmationStatus(@NonNull Long id, boolean emailConfirmed) throws NotFoundException {
-        log.debug("updateEmailConfirmationStatus({}, {})", id, emailConfirmed);
+        log.info("updateEmailConfirmationStatus({}, {})", id, emailConfirmed);
         Profile profile = getProfile(id);
         profile.setEmailConfirmed(emailConfirmed);
         profileRepository.save(profile);
@@ -157,10 +155,11 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public void updateLockoutStatus(@NonNull Long id, boolean blocked) throws NotFoundException {
-        log.debug("updateLockoutStatus({}, {})", id, blocked);
+        log.info("updateLockoutStatus({}, {})", id, blocked);
         if (getCurrentProfile().getRoles().contains(roleService.getRoleByTitle(ROLE_ADMIN))) {
             Profile profile = getProfile(id);
             profile.setBlocked(blocked);
+            profileRepository.save(profile);
         } else {
             throw new ForbiddenException("Not allowed to change user data");
         }
@@ -168,7 +167,7 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.debug("loadUserByUsername({})", username);
+        log.info("loadUserByUsername({})", username);
         Optional<? extends UserDetails> userDetails = profileRepository.findByUsername(username);
         if (!userDetails.isPresent()) {
             throw new UsernameNotFoundException("User with username %s not found");
