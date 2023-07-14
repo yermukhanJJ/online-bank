@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     @Override
     public void register(@NonNull RegisterRequestDto requestDto) {
-        log.debug("register({})", requestDto);
+        log.info("register({})", requestDto);
 
         Profile profile = profileService.createProfile(
                 requestDto.getEmail(),
@@ -85,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void confirmRegistration(@NonNull String email,
                                     @NonNull String token) throws BadRequestException {
-        log.debug("confirmRegistration({}, {})", email, token);
+        log.info("confirmRegistration({}, {})", email, token);
         ConfirmationToken confirmationToken = confirmationService.getToken(token);
 
         // Check if addresses match

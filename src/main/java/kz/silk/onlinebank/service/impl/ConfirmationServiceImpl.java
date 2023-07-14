@@ -26,7 +26,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
 
     @Override
     public void confirmToken(@NonNull ConfirmationToken confirmationToken) throws NotFoundException, ForbiddenException, BadRequestException {
-        log.debug("confirmToken({})", confirmationToken);
+        log.info("confirmToken({})", confirmationToken);
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new BadRequestException("Confirmation token has already been used");
@@ -49,7 +49,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
     @Override
     public ConfirmationToken createToken(@NonNull Profile profile,
                                          @NonNull Integer ttlMinutes) throws BadRequestException {
-        log.debug("createToken({})", profile);
+        log.info("createToken({})", profile);
         if (profile.getEmailConfirmed()) {
             throw new BadRequestException(
                     String.format("User email %s is already confirmed", profile.getEmail()));
