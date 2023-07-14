@@ -1,5 +1,7 @@
 package kz.silk.onlinebank.config;
 
+import kz.silk.onlinebank.controller.AuthController;
+import kz.silk.onlinebank.controller.ProfileController;
 import kz.silk.onlinebank.service.ProfileService;
 import kz.silk.onlinebank.utils.jwt.AuthEntryPointJwt;
 import kz.silk.onlinebank.utils.jwt.AuthTokenFilter;
@@ -56,7 +58,8 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers(AuthController.CONTROLLER_PATH + "/**").permitAll()
+                .antMatchers(ProfileController.CONTROLLER_PATH + "/edit-role", ProfileController.CONTROLLER_PATH + "/lock").hasAuthority("ADMIN")
                 .anyRequest().authenticated();
 
         http.headers().frameOptions().sameOrigin();
