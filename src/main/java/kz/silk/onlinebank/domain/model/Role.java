@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Objects;
 @Table(name = Role.TABLE_NAME)
 @Getter
 @Setter
-public class Role {
+public class Role implements Serializable {
 
     /**
      * Table name constant
